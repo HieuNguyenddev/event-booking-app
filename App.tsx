@@ -10,6 +10,7 @@ import { EventsScreen } from './src/screens/EventsScreen';
 import { FilterScreen } from './src/screens/FilterScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import MapScreen from './src/screens/MapScreen';
+import { NotificationScreen } from './src/screens/NotificationScreen';
 import { OnboardingScreen } from './src/screens/OnboardingScreen';
 import { ProfileScreen } from './src/screens/ProfileScreen';
 import { ResetPasswordScreen } from './src/screens/ResetPasswordScreen';
@@ -35,7 +36,8 @@ type Screen =
   | 'filter'
   | 'eventList'
   | 'profile'
-  | 'user';
+  | 'user'
+  | 'notifications';
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>('splash');
@@ -81,7 +83,10 @@ export default function App() {
             setProfileFrom('home');
             setScreen('profile');
           }}
+          onOpenNotifications={() => setScreen('notifications')}
         />
+      ) : screen === 'notifications' && fontsLoaded ? (
+        <NotificationScreen onBack={() => setScreen('home')} />
       ) : screen === 'profile' && fontsLoaded ? (
         <ProfileScreen
           onBack={() => setScreen(profileFrom)}

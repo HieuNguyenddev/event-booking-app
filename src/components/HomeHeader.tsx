@@ -8,9 +8,10 @@ type Props = {
   onMenuPress?: () => void;
   onSearchPress?: () => void;
   onFilterPress?: () => void;
+  onBellPress?: () => void;
 };
 
-export function HomeHeader({ onMenuPress, onSearchPress, onFilterPress }: Props) {
+export function HomeHeader({ onMenuPress, onSearchPress, onFilterPress, onBellPress }: Props) {
   const insets = useSafeAreaInsets();
 
   return (
@@ -26,9 +27,9 @@ export function HomeHeader({ onMenuPress, onSearchPress, onFilterPress }: Props)
           </View>
           <Text style={styles.locationCity}>New York, USA</Text>
         </View>
-        <View style={styles.bellWrap}>
+        <Pressable style={styles.bellWrap} onPress={onBellPress}>
           <Ionicons name="notifications-outline" size={22} color={colors.white} />
-        </View>
+        </Pressable>
       </View>
 
       <View style={styles.searchRow}>
