@@ -11,9 +11,10 @@ const AVATARS = ['#F3C3A3', '#C9A27A'];
 
 type Props = {
   onBack: () => void;
+  onOpenOrganizer?: () => void;
 };
 
-export function EventDetailsScreen({ onBack }: Props) {
+export function EventDetailsScreen({ onBack, onOpenOrganizer }: Props) {
   const insets = useSafeAreaInsets();
   const [saved, setSaved] = useState(false);
   const [following, setFollowing] = useState(false);
@@ -54,16 +55,16 @@ export function EventDetailsScreen({ onBack }: Props) {
         <InfoRow icon="calendar-outline" title="14 December, 2021" subtitle="Tuesday, 4:00PM - 9:00PM" />
         <InfoRow icon="location" title="Gala Convention Center" subtitle="36 Guild Street London, UK" />
 
-        <View style={styles.organizer}>
-          <Image source={require('../../assets/upback.png')} style={styles.organizerPhoto} resizeMode="cover" />
+        <Pressable style={styles.organizer} onPress={onOpenOrganizer}>
+          <Image source={require('../../assets/avatar-david.png')} style={styles.organizerPhoto} resizeMode="cover" />
           <View style={styles.organizerBody}>
-            <Text style={styles.organizerName}>Ashfak Sayem</Text>
+            <Text style={styles.organizerName}>David Silbia</Text>
             <Text style={styles.organizerRole}>Organizer</Text>
           </View>
           <Pressable style={styles.follow} onPress={() => setFollowing((current) => !current)}>
             <Text style={styles.followText}>{following ? 'Following' : 'Follow'}</Text>
           </Pressable>
-        </View>
+        </Pressable>
 
         <Text style={styles.aboutTitle}>About Event</Text>
         <Text style={styles.about}>
@@ -218,7 +219,7 @@ const styles = StyleSheet.create({
   organizerPhoto: {
     width: 48,
     height: 48,
-    borderRadius: 12,
+    borderRadius: 24,
     backgroundColor: '#E7A07A',
   },
   organizerBody: {

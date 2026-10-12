@@ -18,6 +18,7 @@ type Props = {
   onOpenSearch?: () => void;
   onOpenEvents?: () => void;
   onOpenFilter?: () => void;
+  onOpenProfile?: () => void;
 };
 
 export default function HomeScreen({
@@ -27,6 +28,7 @@ export default function HomeScreen({
   onOpenSearch,
   onOpenEvents,
   onOpenFilter,
+  onOpenProfile,
 }: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -56,6 +58,7 @@ export default function HomeScreen({
         onTabPress={(label) => {
           if (label === 'Map') onOpenMap?.();
           if (label === 'Events') onOpenEvents?.();
+          if (label === 'Profile') onOpenProfile?.();
         }}
       />
       {menuOpen ? (
@@ -64,6 +67,10 @@ export default function HomeScreen({
           onSignOut={() => {
             setMenuOpen(false);
             onSignOut?.();
+          }}
+          onOpenProfile={() => {
+            setMenuOpen(false);
+            onOpenProfile?.();
           }}
         />
       ) : null}

@@ -8,9 +8,10 @@ import { colors } from '../theme';
 type Props = {
   onClose: () => void;
   onSignOut: () => void;
+  onOpenProfile?: () => void;
 };
 
-export function SideMenu({ onClose, onSignOut }: Props) {
+export function SideMenu({ onClose, onSignOut, onOpenProfile }: Props) {
   const insets = useSafeAreaInsets();
 
   return (
@@ -25,7 +26,9 @@ export function SideMenu({ onClose, onSignOut }: Props) {
             <Pressable
               key={item.id}
               style={styles.row}
-              onPress={item.id === 'signout' ? onSignOut : undefined}
+              onPress={
+                item.id === 'signout' ? onSignOut : item.id === 'profile' ? onOpenProfile : undefined
+              }
             >
               <View style={styles.iconWrap}>
                 <Ionicons name={item.icon} size={22} color="#3A3A44" />

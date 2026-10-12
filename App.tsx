@@ -11,11 +11,13 @@ import { FilterScreen } from './src/screens/FilterScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import MapScreen from './src/screens/MapScreen';
 import { OnboardingScreen } from './src/screens/OnboardingScreen';
+import { ProfileScreen } from './src/screens/ProfileScreen';
 import { ResetPasswordScreen } from './src/screens/ResetPasswordScreen';
 import { SearchScreen } from './src/screens/SearchScreen';
 import { SignInScreen } from './src/screens/SignInScreen';
 import { SignUpScreen } from './src/screens/SignUpScreen';
 import { SplashScreen } from './src/screens/SplashScreen';
+import { UserProfileScreen, type UserTab } from './src/screens/UserProfileScreen';
 import { VerificationScreen } from './src/screens/VerificationScreen';
 
 type Screen =
@@ -31,11 +33,16 @@ type Screen =
   | 'search'
   | 'events'
   | 'filter'
-  | 'eventList';
+  | 'eventList'
+  | 'profile'
+  | 'user';
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>('splash');
   const [returnTo, setReturnTo] = useState<Screen>('search');
+  const [eventFrom, setEventFrom] = useState<Screen>('home');
+  const [userTab, setUserTab] = useState<UserTab>('about');
+  const [profileFrom, setProfileFrom] = useState<Screen>('home');
   const [slide, setSlide] = useState(0);
   const [fontsLoaded] = useAppFonts();
   const showHome = screen === 'home' && fontsLoaded;
@@ -59,13 +66,43 @@ export default function App() {
       {showHome ? (
         <HomeScreen
           onSignOut={() => setScreen('signin')}
-          onOpenEvent={() => setScreen('event')}
+          onOpenEvent={() => {
+            setEventFrom('home');
+            setScreen('event');
+          }}
           onOpenMap={() => setScreen('map')}
           onOpenSearch={() => setScreen('search')}
           onOpenEvents={() => setScreen('events')}
           onOpenFilter={() => {
             setReturnTo('home');
             setScreen('filter');
+          }}
+          onOpenProfile={() => {
+            setProfileFrom('home');
+            setScreen('profile');
+          }}
+        />
+      ) : screen === 'profile' && fontsLoaded ? (
+        <ProfileScreen
+          onBack={() => setScreen(profileFrom)}
+          onOpenUser={() => {
+            setReturnTo('profile');
+            setUserTab('about');
+            setScreen('user');
+          }}
+        />
+      ) : screen === 'user' && fontsLoaded ? (
+        <UserProfileScreen
+          tab={userTab}
+          onChangeTab={setUserTab}
+          onBack={() => setScreen(returnTo)}
+          onOpenProfile={() => {
+            setProfileFrom('user');
+            setScreen('profile');
+          }}
+          onOpenEvent={() => {
+            setEventFrom('user');
+            setScreen('event');
           }}
         />
       ) : screen === 'filter' && fontsLoaded ? (
@@ -74,7 +111,10 @@ export default function App() {
         <EventListScreen
           onBack={() => setScreen(returnTo)}
           onSearch={() => setScreen('search')}
-          onOpenEvent={() => setScreen('event')}
+          onOpenEvent={() => {
+            setEventFrom('home');
+            setScreen('event');
+          }}
         />
       ) : screen === 'events' && fontsLoaded ? (
         <EventsScreen
@@ -87,7 +127,10 @@ export default function App() {
       ) : screen === 'search' && fontsLoaded ? (
         <SearchScreen
           onBack={() => setScreen('home')}
-          onOpenEvent={() => setScreen('event')}
+          onOpenEvent={() => {
+            setEventFrom('home');
+            setScreen('event');
+          }}
           onOpenFilter={() => {
             setReturnTo('search');
             setScreen('filter');
@@ -96,7 +139,14 @@ export default function App() {
       ) : screen === 'map' && fontsLoaded ? (
         <MapScreen onBack={() => setScreen('home')} />
       ) : screen === 'event' && fontsLoaded ? (
-        <EventDetailsScreen onBack={() => setScreen('home')} />
+        <EventDetailsScreen
+          onBack={() => setScreen(eventFrom)}
+          onOpenOrganizer={() => {
+            setReturnTo('event');
+            setUserTab('about');
+            setScreen('user');
+          }}
+        />
       ) : screen === 'signin' && fontsLoaded ? (
         <SignInScreen
           onSignIn={() => setScreen('home')}
