@@ -9,9 +9,10 @@ import { cardShadow, colors } from '../theme';
 type Props = {
   onBack: () => void;
   onOpenEvent?: () => void;
+  onOpenFilter?: () => void;
 };
 
-export function SearchScreen({ onBack, onOpenEvent }: Props) {
+export function SearchScreen({ onBack, onOpenEvent, onOpenFilter }: Props) {
   const insets = useSafeAreaInsets();
   const [query, setQuery] = useState('');
 
@@ -43,7 +44,7 @@ export function SearchScreen({ onBack, onOpenEvent }: Props) {
             autoCapitalize="none"
           />
         </View>
-        <Pressable style={styles.filters}>
+        <Pressable style={styles.filters} onPress={onOpenFilter}>
           <Ionicons name="options" size={14} color={colors.white} />
           <Text style={styles.filtersText}>Filters</Text>
         </Pressable>

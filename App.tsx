@@ -5,7 +5,9 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { onboardingSlides } from './src/data/onboarding';
 import { useAppFonts } from './src/hooks/useAppFonts';
 import { EventDetailsScreen } from './src/screens/EventDetailsScreen';
+import { EventListScreen } from './src/screens/EventListScreen';
 import { EventsScreen } from './src/screens/EventsScreen';
+import { FilterScreen } from './src/screens/FilterScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import MapScreen from './src/screens/MapScreen';
 import { OnboardingScreen } from './src/screens/OnboardingScreen';
@@ -27,10 +29,13 @@ type Screen =
   | 'event'
   | 'map'
   | 'search'
-  | 'events';
+  | 'events'
+  | 'filter'
+  | 'eventList';
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>('splash');
+  const [returnTo, setReturnTo] = useState<Screen>('search');
   const [slide, setSlide] = useState(0);
   const [fontsLoaded] = useAppFonts();
   const showHome = screen === 'home' && fontsLoaded;
@@ -58,11 +63,36 @@ export default function App() {
           onOpenMap={() => setScreen('map')}
           onOpenSearch={() => setScreen('search')}
           onOpenEvents={() => setScreen('events')}
+          onOpenFilter={() => {
+            setReturnTo('home');
+            setScreen('filter');
+          }}
+        />
+      ) : screen === 'filter' && fontsLoaded ? (
+        <FilterScreen onClose={() => setScreen(returnTo)} onApply={() => setScreen('eventList')} />
+      ) : screen === 'eventList' && fontsLoaded ? (
+        <EventListScreen
+          onBack={() => setScreen(returnTo)}
+          onSearch={() => setScreen('search')}
+          onOpenEvent={() => setScreen('event')}
         />
       ) : screen === 'events' && fontsLoaded ? (
-        <EventsScreen onBack={() => setScreen('home')} onExplore={() => setScreen('home')} />
+        <EventsScreen
+          onBack={() => setScreen('home')}
+          onExplore={() => {
+            setReturnTo('events');
+            setScreen('eventList');
+          }}
+        />
       ) : screen === 'search' && fontsLoaded ? (
-        <SearchScreen onBack={() => setScreen('home')} onOpenEvent={() => setScreen('event')} />
+        <SearchScreen
+          onBack={() => setScreen('home')}
+          onOpenEvent={() => setScreen('event')}
+          onOpenFilter={() => {
+            setReturnTo('search');
+            setScreen('filter');
+          }}
+        />
       ) : screen === 'map' && fontsLoaded ? (
         <MapScreen onBack={() => setScreen('home')} />
       ) : screen === 'event' && fontsLoaded ? (

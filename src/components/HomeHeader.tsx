@@ -7,9 +7,10 @@ import { colors } from '../theme';
 type Props = {
   onMenuPress?: () => void;
   onSearchPress?: () => void;
+  onFilterPress?: () => void;
 };
 
-export function HomeHeader({ onMenuPress, onSearchPress }: Props) {
+export function HomeHeader({ onMenuPress, onSearchPress, onFilterPress }: Props) {
   const insets = useSafeAreaInsets();
 
   return (
@@ -36,10 +37,10 @@ export function HomeHeader({ onMenuPress, onSearchPress }: Props) {
           <View style={styles.searchDivider} />
           <Text style={styles.searchPlaceholder}>Search...</Text>
         </Pressable>
-        <View style={styles.filterButton}>
+        <Pressable style={styles.filterButton} onPress={onFilterPress}>
           <Ionicons name="options-outline" size={16} color={colors.white} />
           <Text style={styles.filterText}>Filters</Text>
-        </View>
+        </Pressable>
       </View>
     </View>
   );

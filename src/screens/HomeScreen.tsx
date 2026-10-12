@@ -17,14 +17,22 @@ type Props = {
   onOpenMap?: () => void;
   onOpenSearch?: () => void;
   onOpenEvents?: () => void;
+  onOpenFilter?: () => void;
 };
 
-export default function HomeScreen({ onSignOut, onOpenEvent, onOpenMap, onOpenSearch, onOpenEvents }: Props) {
+export default function HomeScreen({
+  onSignOut,
+  onOpenEvent,
+  onOpenMap,
+  onOpenSearch,
+  onOpenEvents,
+  onOpenFilter,
+}: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <View style={styles.screen}>
-      <HomeHeader onMenuPress={() => setMenuOpen(true)} onSearchPress={onOpenSearch} />
+      <HomeHeader onMenuPress={() => setMenuOpen(true)} onSearchPress={onOpenSearch} onFilterPress={onOpenFilter} />
       <ScrollView
         style={styles.body}
         contentContainerStyle={styles.content}
