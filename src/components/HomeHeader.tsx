@@ -1,16 +1,22 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { colors } from '../theme';
 
-export function HomeHeader() {
+type Props = {
+  onMenuPress?: () => void;
+};
+
+export function HomeHeader({ onMenuPress }: Props) {
   const insets = useSafeAreaInsets();
 
   return (
     <View style={[styles.header, { paddingTop: insets.top + 8 }]}>
       <View style={styles.topRow}>
-        <Ionicons name="menu" size={26} color={colors.white} />
+        <Pressable onPress={onMenuPress} hitSlop={8}>
+          <Ionicons name="menu" size={26} color={colors.white} />
+        </Pressable>
         <View style={styles.locationBlock}>
           <View style={styles.locationLabelRow}>
             <Text style={styles.locationLabel}>Current Location</Text>
@@ -19,18 +25,18 @@ export function HomeHeader() {
           <Text style={styles.locationCity}>New York, USA</Text>
         </View>
         <View style={styles.bellWrap}>
-          <Ionicons name="notifications-outline" size={24} color={colors.white} />
-          <View style={styles.bellDot} />
+          <Ionicons name="notifications-outline" size={22} color={colors.white} />
         </View>
       </View>
 
       <View style={styles.searchRow}>
         <View style={styles.searchBox}>
           <Ionicons name="search" size={18} color={colors.white} />
+          <View style={styles.searchDivider} />
           <Text style={styles.searchPlaceholder}>Search...</Text>
         </View>
         <View style={styles.filterButton}>
-          <Ionicons name="options-outline" size={16} color={colors.purple} />
+          <Ionicons name="options-outline" size={16} color={colors.white} />
           <Text style={styles.filterText}>Filters</Text>
         </View>
       </View>
@@ -71,20 +77,12 @@ const styles = StyleSheet.create({
     marginTop: 1,
   },
   bellWrap: {
-    width: 28,
-    height: 28,
-    alignItems: 'flex-end',
-  },
-  bellDot: {
-    position: 'absolute',
-    top: 1,
-    right: 1,
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: colors.bell,
-    borderWidth: 1,
-    borderColor: colors.purple,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255,255,255,0.16)',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   searchRow: {
     flexDirection: 'row',
@@ -102,6 +100,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     gap: 8,
   },
+  searchDivider: {
+    width: 1,
+    height: 18,
+    backgroundColor: 'rgba(255,255,255,0.45)',
+  },
   searchPlaceholder: {
     color: 'rgba(255,255,255,0.9)',
     fontFamily: 'Nunito_500Medium',
@@ -110,14 +113,14 @@ const styles = StyleSheet.create({
   filterButton: {
     height: 46,
     borderRadius: 23,
-    backgroundColor: colors.white,
+    backgroundColor: 'rgba(255,255,255,0.2)',
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 14,
     gap: 6,
   },
   filterText: {
-    color: colors.purple,
+    color: colors.white,
     fontFamily: 'Nunito_700Bold',
     fontSize: 14,
   },

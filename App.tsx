@@ -4,6 +4,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { onboardingSlides } from './src/data/onboarding';
 import { useAppFonts } from './src/hooks/useAppFonts';
+import { EventDetailsScreen } from './src/screens/EventDetailsScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import { OnboardingScreen } from './src/screens/OnboardingScreen';
 import { ResetPasswordScreen } from './src/screens/ResetPasswordScreen';
@@ -12,7 +13,7 @@ import { SignUpScreen } from './src/screens/SignUpScreen';
 import { SplashScreen } from './src/screens/SplashScreen';
 import { VerificationScreen } from './src/screens/VerificationScreen';
 
-type Screen = 'splash' | 'onboarding' | 'signin' | 'signup' | 'verify' | 'reset' | 'home';
+type Screen = 'splash' | 'onboarding' | 'signin' | 'signup' | 'verify' | 'reset' | 'home' | 'event';
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>('splash');
@@ -20,7 +21,7 @@ export default function App() {
   const [fontsLoaded] = useAppFonts();
   const showHome = screen === 'home' && fontsLoaded;
   const showOnboarding = screen === 'onboarding' && fontsLoaded;
-  const lightStatus = showHome || (showOnboarding && slide === 0);
+  const lightStatus = showHome || screen === 'event' || (showOnboarding && slide === 0);
 
   function finishOnboarding() {
     setScreen('signin');
@@ -37,7 +38,9 @@ export default function App() {
   return (
     <SafeAreaProvider>
       {showHome ? (
-        <HomeScreen />
+        <HomeScreen onSignOut={() => setScreen('signin')} onOpenEvent={() => setScreen('event')} />
+      ) : screen === 'event' && fontsLoaded ? (
+        <EventDetailsScreen onBack={() => setScreen('home')} />
       ) : screen === 'signin' && fontsLoaded ? (
         <SignInScreen
           onSignIn={() => setScreen('home')}

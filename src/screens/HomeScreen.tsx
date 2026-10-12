@@ -1,23 +1,30 @@
+import { useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { CategoryList } from '../components/CategoryList';
 import { EventCard } from '../components/EventCard';
 import { HomeHeader } from '../components/HomeHeader';
-import { NearbyEventCard } from '../components/NearbyEventCard';
+import { HomeTabBar } from '../components/HomeTabBar';
+import { InviteBanner } from '../components/InviteBanner';
 import { SectionHeader } from '../components/SectionHeader';
-import { categories, nearbyEvent, upcomingEvents } from '../data/home';
+import { SideMenu } from '../components/SideMenu';
+import { categories, upcomingEvents } from '../data/home';
 import { colors } from '../theme';
 
-export default function HomeScreen() {
-  const insets = useSafeAreaInsets();
+type Props = {
+  onSignOut?: () => void;
+  onOpenEvent?: () => void;
+};
+
+export default function HomeScreen({ onSignOut, onOpenEvent }: Props) {
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <View style={styles.screen}>
-      <HomeHeader />
+      <HomeHeader onMenuPress={() => setMenuOpen(true)} />
       <ScrollView
         style={styles.body}
-        contentContainerStyle={{ paddingBottom: insets.bottom + 24 }}
+        contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
         <CategoryList categories={categories} />
@@ -28,12 +35,22 @@ export default function HomeScreen() {
           contentContainerStyle={styles.cards}
         >
           {upcomingEvents.map((event) => (
-            <EventCard key={event.id} event={event} />
+            <EventCard key={event.id} event={event} onPress={onOpenEvent} />
           ))}
         </ScrollView>
+        <InviteBanner />
         <SectionHeader title="Nearby You" />
-        <NearbyEventCard event={nearbyEvent} />
       </ScrollView>
+      <HomeTabBar />
+      {menuOpen ? (
+        <SideMenu
+          onClose={() => setMenuOpen(false)}
+          onSignOut={() => {
+            setMenuOpen(false);
+            onSignOut?.();
+          }}
+        />
+      ) : null}
     </View>
   );
 }
@@ -46,6 +63,9 @@ const styles = StyleSheet.create({
   body: {
     flex: 1,
     marginTop: -22,
+  },
+  content: {
+    paddingBottom: 28,
   },
   cards: {
     paddingHorizontal: 20,

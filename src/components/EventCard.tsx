@@ -1,5 +1,5 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { cardShadow, colors } from '../theme';
 import type { UpcomingEvent } from '../types';
@@ -9,11 +9,12 @@ const AVATAR_COLORS = ['#F3C3A3', '#E7A57A', '#C98562'];
 
 type Props = {
   event: UpcomingEvent;
+  onPress?: () => void;
 };
 
-export function EventCard({ event }: Props) {
+export function EventCard({ event, onPress }: Props) {
   return (
-    <View style={styles.card}>
+    <Pressable style={styles.card} onPress={onPress}>
       <View style={styles.imageWrap}>
         <Image source={event.image} style={styles.image} resizeMode="cover" />
         <View style={styles.dateBadge}>
@@ -21,10 +22,12 @@ export function EventCard({ event }: Props) {
           <Text style={styles.dateMonth}>{event.month}</Text>
         </View>
         <View style={styles.bookmark}>
-          <Ionicons name="bookmark-outline" size={16} color={colors.white} />
+          <Ionicons name="bookmark" size={16} color={colors.coral} />
         </View>
       </View>
-      <Text style={styles.title}>{event.title}</Text>
+      <Text style={styles.title} numberOfLines={1}>
+        {event.title}
+      </Text>
       <View style={styles.goingRow}>
         <View style={styles.avatars}>
           {AVATAR_COLORS.map((color, index) => (
@@ -39,7 +42,7 @@ export function EventCard({ event }: Props) {
       <View style={styles.place}>
         <PlaceLabel place={event.place} />
       </View>
-    </View>
+    </Pressable>
   );
 }
 
@@ -92,7 +95,7 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 8,
-    backgroundColor: 'rgba(255,255,255,0.25)',
+    backgroundColor: colors.white,
     alignItems: 'center',
     justifyContent: 'center',
   },

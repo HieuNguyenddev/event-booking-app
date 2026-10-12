@@ -1,3 +1,4 @@
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { colors } from '../theme';
@@ -10,7 +11,10 @@ export function SectionHeader({ title }: Props) {
   return (
     <View style={styles.row}>
       <Text style={styles.title}>{title}</Text>
-      <Text style={styles.seeAll}>See All</Text>
+      <View style={styles.seeAll}>
+        <Text style={styles.seeAllText}>See All</Text>
+        <Ionicons name="chevron-forward" size={14} color={colors.muted} />
+      </View>
     </View>
   );
 }
@@ -30,6 +34,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   seeAll: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 2,
+  },
+  seeAllText: {
     color: colors.muted,
     fontFamily: 'Nunito_600SemiBold',
     fontSize: 14,
