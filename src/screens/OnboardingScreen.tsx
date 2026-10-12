@@ -1,19 +1,31 @@
 import { StyleSheet, View } from 'react-native';
 
 import { OnboardingSheet } from '../components/OnboardingSheet';
-import HomeScreen from './HomeScreen';
+import { onboardingSlides } from '../data/onboarding';
 
 type Props = {
-  onDone: () => void;
+  index: number;
+  onSkip: () => void;
+  onNext: () => void;
 };
 
-export function OnboardingScreen({ onDone }: Props) {
+export function OnboardingScreen({ index, onSkip, onNext }: Props) {
+  const slide = onboardingSlides[index];
+  const Preview = slide.Preview;
+
   return (
     <View style={styles.screen}>
       <View style={styles.preview} pointerEvents="none">
-        <HomeScreen />
+        <Preview />
       </View>
-      <OnboardingSheet onSkip={onDone} onNext={onDone} />
+      <OnboardingSheet
+        title={slide.title}
+        body={slide.body}
+        pageCount={onboardingSlides.length}
+        activePage={index}
+        onSkip={onSkip}
+        onNext={onNext}
+      />
     </View>
   );
 }

@@ -1,17 +1,19 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { onboardingSlide } from '../data/onboarding';
 import { colors } from '../theme';
 
 type Props = {
+  title: string;
+  body: string;
+  pageCount: number;
+  activePage: number;
   onSkip: () => void;
   onNext: () => void;
 };
 
-export function OnboardingSheet({ onSkip, onNext }: Props) {
+export function OnboardingSheet({ title, body, pageCount, activePage, onSkip, onNext }: Props) {
   const insets = useSafeAreaInsets();
-  const { title, body, pageCount, activePage } = onboardingSlide;
 
   return (
     <View style={[styles.sheet, { paddingBottom: insets.bottom + 28 }]}>
