@@ -6,9 +6,10 @@ import { colors } from '../theme';
 
 type Props = {
   onMenuPress?: () => void;
+  onSearchPress?: () => void;
 };
 
-export function HomeHeader({ onMenuPress }: Props) {
+export function HomeHeader({ onMenuPress, onSearchPress }: Props) {
   const insets = useSafeAreaInsets();
 
   return (
@@ -30,11 +31,11 @@ export function HomeHeader({ onMenuPress }: Props) {
       </View>
 
       <View style={styles.searchRow}>
-        <View style={styles.searchBox}>
+        <Pressable style={styles.searchBox} onPress={onSearchPress}>
           <Ionicons name="search" size={18} color={colors.white} />
           <View style={styles.searchDivider} />
           <Text style={styles.searchPlaceholder}>Search...</Text>
-        </View>
+        </Pressable>
         <View style={styles.filterButton}>
           <Ionicons name="options-outline" size={16} color={colors.white} />
           <Text style={styles.filterText}>Filters</Text>

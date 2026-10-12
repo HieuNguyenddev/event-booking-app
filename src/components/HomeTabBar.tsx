@@ -1,5 +1,5 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { colors } from '../theme';
@@ -12,13 +12,17 @@ const TABS: { label: string; icon: IconName }[] = [
   { label: 'Profile', icon: 'person-outline' },
 ];
 
-export function HomeTabBar() {
+type Props = {
+  onTabPress?: (label: string) => void;
+};
+
+export function HomeTabBar({ onTabPress }: Props) {
   const insets = useSafeAreaInsets();
 
   return (
     <View style={[styles.bar, { paddingBottom: Math.max(insets.bottom, 10) }]}>
       {TABS.slice(0, 2).map((tab) => (
-        <TabItem key={tab.label} {...tab} active={tab.label === 'Explore'} />
+        <TabItem key={tab.label} {...tab} active={tab.label === 'Explore'} onPress={onTabPress} />
       ))}
       <View style={styles.fabSlot}>
         <View style={styles.fab}>
@@ -26,19 +30,29 @@ export function HomeTabBar() {
         </View>
       </View>
       {TABS.slice(2).map((tab) => (
-        <TabItem key={tab.label} {...tab} active={false} />
+        <TabItem key={tab.label} {...tab} active={false} onPress={onTabPress} />
       ))}
     </View>
   );
 }
 
-function TabItem({ label, icon, active }: { label: string; icon: IconName; active: boolean }) {
+function TabItem({
+  label,
+  icon,
+  active,
+  onPress,
+}: {
+  label: string;
+  icon: IconName;
+  active: boolean;
+  onPress?: (label: string) => void;
+}) {
   const color = active ? colors.purple : '#B8B8C7';
   return (
-    <View style={styles.item}>
+    <Pressable style={styles.item} onPress={() => onPress?.(label)}>
       <Ionicons name={icon} size={22} color={color} />
       <Text style={[styles.label, { color }]}>{label}</Text>
-    </View>
+    </Pressable>
   );
 }
 

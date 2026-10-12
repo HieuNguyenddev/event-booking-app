@@ -6,14 +6,16 @@ import { onboardingSlides } from './src/data/onboarding';
 import { useAppFonts } from './src/hooks/useAppFonts';
 import { EventDetailsScreen } from './src/screens/EventDetailsScreen';
 import HomeScreen from './src/screens/HomeScreen';
+import MapScreen from './src/screens/MapScreen';
 import { OnboardingScreen } from './src/screens/OnboardingScreen';
 import { ResetPasswordScreen } from './src/screens/ResetPasswordScreen';
+import { SearchScreen } from './src/screens/SearchScreen';
 import { SignInScreen } from './src/screens/SignInScreen';
 import { SignUpScreen } from './src/screens/SignUpScreen';
 import { SplashScreen } from './src/screens/SplashScreen';
 import { VerificationScreen } from './src/screens/VerificationScreen';
 
-type Screen = 'splash' | 'onboarding' | 'signin' | 'signup' | 'verify' | 'reset' | 'home' | 'event';
+type Screen = 'splash' | 'onboarding' | 'signin' | 'signup' | 'verify' | 'reset' | 'home' | 'event' | 'map' | 'search';
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>('splash');
@@ -38,7 +40,16 @@ export default function App() {
   return (
     <SafeAreaProvider>
       {showHome ? (
-        <HomeScreen onSignOut={() => setScreen('signin')} onOpenEvent={() => setScreen('event')} />
+        <HomeScreen
+          onSignOut={() => setScreen('signin')}
+          onOpenEvent={() => setScreen('event')}
+          onOpenMap={() => setScreen('map')}
+          onOpenSearch={() => setScreen('search')}
+        />
+      ) : screen === 'search' && fontsLoaded ? (
+        <SearchScreen onBack={() => setScreen('home')} onOpenEvent={() => setScreen('event')} />
+      ) : screen === 'map' && fontsLoaded ? (
+        <MapScreen onBack={() => setScreen('home')} />
       ) : screen === 'event' && fontsLoaded ? (
         <EventDetailsScreen onBack={() => setScreen('home')} />
       ) : screen === 'signin' && fontsLoaded ? (

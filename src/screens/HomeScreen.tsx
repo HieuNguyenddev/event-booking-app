@@ -14,14 +14,16 @@ import { colors } from '../theme';
 type Props = {
   onSignOut?: () => void;
   onOpenEvent?: () => void;
+  onOpenMap?: () => void;
+  onOpenSearch?: () => void;
 };
 
-export default function HomeScreen({ onSignOut, onOpenEvent }: Props) {
+export default function HomeScreen({ onSignOut, onOpenEvent, onOpenMap, onOpenSearch }: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <View style={styles.screen}>
-      <HomeHeader onMenuPress={() => setMenuOpen(true)} />
+      <HomeHeader onMenuPress={() => setMenuOpen(true)} onSearchPress={onOpenSearch} />
       <ScrollView
         style={styles.body}
         contentContainerStyle={styles.content}
@@ -41,7 +43,7 @@ export default function HomeScreen({ onSignOut, onOpenEvent }: Props) {
         <InviteBanner />
         <SectionHeader title="Nearby You" />
       </ScrollView>
-      <HomeTabBar />
+      <HomeTabBar onTabPress={(label) => label === 'Map' && onOpenMap?.()} />
       {menuOpen ? (
         <SideMenu
           onClose={() => setMenuOpen(false)}

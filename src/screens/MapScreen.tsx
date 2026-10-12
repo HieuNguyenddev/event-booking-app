@@ -1,11 +1,15 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { mapChips, mapPins } from '../data/map';
 import { cardShadow, colors } from '../theme';
 
-export default function MapScreen() {
+type Props = {
+  onBack?: () => void;
+};
+
+export default function MapScreen({ onBack }: Props) {
   const insets = useSafeAreaInsets();
 
   return (
@@ -13,15 +17,14 @@ export default function MapScreen() {
       <MapCanvas />
       <View style={[styles.top, { paddingTop: insets.top + 8 }]}>
         <View style={styles.searchRow}>
-          <View style={styles.circleButton}>
-            <Ionicons name="chevron-back" size={20} color={colors.text} />
-          </View>
           <View style={styles.searchBox}>
-            <Ionicons name="search" size={16} color={colors.muted} />
-            <Text style={styles.searchText}>Search event, location ect.</Text>
+            <Pressable onPress={onBack} hitSlop={8}>
+              <Ionicons name="chevron-back" size={20} color={colors.text} />
+            </Pressable>
+            <Text style={styles.searchText}>Find for food or restaurant...</Text>
           </View>
-          <View style={[styles.circleButton, styles.filterButton]}>
-            <Ionicons name="options" size={18} color={colors.white} />
+          <View style={styles.locate}>
+            <Ionicons name="locate" size={20} color={colors.white} />
           </View>
         </View>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips}>
@@ -37,17 +40,14 @@ export default function MapScreen() {
       {mapPins.map((pin) => (
         <View key={pin.id} style={[styles.pin, { top: pin.top, left: pin.left }]}>
           <View style={[styles.pinIcon, { backgroundColor: pin.color }]}>
-            <Ionicons name={pin.icon} size={14} color={colors.white} />
+            <Ionicons name={pin.icon} size={16} color={colors.white} />
           </View>
-          <View>
-            <Text style={styles.ticket}>Ticket: $30</Text>
-            <Text style={styles.pinTitle}>{pin.title}</Text>
-          </View>
+          <View style={styles.pinTail} />
         </View>
       ))}
 
-      <View style={[styles.locate, { bottom: insets.bottom + 168 }]}>
-        <Ionicons name="locate-outline" size={22} color={colors.purple} />
+      <View style={[styles.layers, { bottom: insets.bottom + 150 }]}>
+        <Ionicons name="options" size={18} color={colors.white} />
       </View>
 
       <ScrollView
@@ -57,12 +57,20 @@ export default function MapScreen() {
         contentContainerStyle={styles.cardsContent}
       >
         <View style={styles.card}>
-          <Image source={require('../../assets/map-art.png')} style={styles.cardImage} resizeMode="cover" />
-          <View style={styles.bookmark}>
-            <Ionicons name="bookmark" size={16} color="#F1665E" />
+          <Image source={require('../../assets/event-hands.png')} style={styles.cardImage} resizeMode="cover" />
+          <View style={styles.cardBody}>
+            <Text style={styles.cardTime}>Wed, Apr 28 · 5:30 PM</Text>
+            <Text style={styles.cardTitle}>Jo Malone London's Mother's Day Presents</Text>
+            <View style={styles.cardPlace}>
+              <Ionicons name="location-sharp" size={12} color={colors.muted} />
+              <Text style={styles.cardPlaceText} numberOfLines={1}>
+                Radius Gallery · Santa Cruz, CA
+              </Text>
+            </View>
           </View>
+          <Ionicons name="bookmark" size={18} color={colors.coral} />
         </View>
-        <View style={[styles.card, styles.cardPeek]} />
+        <View style={styles.cardPeek} />
       </ScrollView>
     </View>
   );
@@ -73,13 +81,14 @@ function MapCanvas() {
     <View style={styles.canvas}>
       <View style={[styles.road, styles.roadH1]} />
       <View style={[styles.road, styles.roadH2]} />
-      <View style={[styles.road, styles.roadH3]} />
       <View style={[styles.road, styles.roadV1]} />
       <View style={[styles.road, styles.roadV2]} />
-      <View style={styles.park} />
-      <Text style={[styles.label, { top: '30%', left: '14%' }]}>116th Ave NE</Text>
-      <Text style={[styles.label, { top: '48%', left: '58%' }]}>NORTHEAST{'\n'}BELLEVUE</Text>
-      <Text style={[styles.label, { top: '62%', left: '20%' }]}>Northup Way</Text>
+      <Text style={[styles.street, styles.streetVertical, { top: '34%', left: '8%' }]}>164th Ave NE</Text>
+      <Text style={[styles.street, { top: '42%', left: '28%' }]}>Northup Way</Text>
+      <Text style={[styles.area, { top: '38%', left: '58%' }]}>NORTHEAST{'\n'}BELLEVUE</Text>
+      <Text style={[styles.street, { top: '62%', left: '48%' }]}>NE 8th St</Text>
+      <Text style={[styles.street, styles.streetVertical, { top: '68%', left: '18%' }]}>164th Ave NE</Text>
+      <Text style={styles.google}>Google</Text>
     </View>
   );
 }
@@ -87,35 +96,44 @@ function MapCanvas() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: '#EEF1F4',
+    backgroundColor: '#F4F5F7',
   },
   canvas: {
     ...StyleSheet.absoluteFill,
-    backgroundColor: '#F3F5F7',
+    backgroundColor: '#F7F8FA',
   },
   road: {
     position: 'absolute',
     backgroundColor: '#FFFFFF',
   },
-  roadH1: { top: '28%', left: 0, right: 0, height: 14 },
-  roadH2: { top: '46%', left: 0, right: 0, height: 10 },
-  roadH3: { top: '68%', left: 0, right: 0, height: 12 },
-  roadV1: { top: 0, bottom: 0, left: '28%', width: 12 },
-  roadV2: { top: 0, bottom: 0, left: '72%', width: 16 },
-  park: {
+  roadH1: { top: '44%', left: 0, right: 0, height: 18 },
+  roadH2: { top: '64%', left: 0, right: 0, height: 10 },
+  roadV1: { top: 0, bottom: 0, left: '22%', width: 14 },
+  roadV2: { top: 0, bottom: 0, left: '70%', width: 12 },
+  street: {
     position: 'absolute',
-    top: '50%',
-    left: '36%',
-    width: 70,
-    height: 48,
-    borderRadius: 10,
-    backgroundColor: '#E3F6EA',
-  },
-  label: {
-    position: 'absolute',
-    color: '#B0B4BE',
+    color: '#C5C8D0',
     fontFamily: 'Nunito_700Bold',
     fontSize: 11,
+  },
+  streetVertical: {
+    transform: [{ rotate: '-90deg' }],
+  },
+  area: {
+    position: 'absolute',
+    color: '#C5C8D0',
+    fontFamily: 'Nunito_800ExtraBold',
+    fontSize: 13,
+    letterSpacing: 1,
+    textAlign: 'center',
+  },
+  google: {
+    position: 'absolute',
+    left: 16,
+    bottom: 132,
+    color: '#D0D3DA',
+    fontFamily: 'Nunito_700Bold',
+    fontSize: 12,
   },
   top: {
     paddingHorizontal: 16,
@@ -125,62 +143,58 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 10,
   },
-  circleButton: {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
-    backgroundColor: colors.white,
-    alignItems: 'center',
-    justifyContent: 'center',
-    ...cardShadow,
-  },
-  filterButton: {
-    backgroundColor: colors.purple,
-  },
   searchBox: {
     flex: 1,
-    height: 42,
-    borderRadius: 21,
+    height: 48,
+    borderRadius: 14,
     backgroundColor: colors.white,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 14,
+    paddingHorizontal: 12,
     gap: 8,
     ...cardShadow,
   },
   searchText: {
-    color: colors.muted,
-    fontFamily: 'Nunito_500Medium',
-    fontSize: 13,
+    color: '#B0B3BE',
+    fontFamily: 'Nunito_600SemiBold',
+    fontSize: 14,
+  },
+  locate: {
+    width: 48,
+    height: 48,
+    borderRadius: 14,
+    backgroundColor: colors.accent,
+    alignItems: 'center',
+    justifyContent: 'center',
+    ...cardShadow,
   },
   chips: {
     gap: 10,
     paddingVertical: 14,
   },
   chip: {
-    height: 36,
-    borderRadius: 18,
+    height: 38,
+    borderRadius: 19,
     backgroundColor: colors.white,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 12,
+    paddingHorizontal: 14,
     gap: 6,
     ...cardShadow,
   },
   chipLabel: {
     color: colors.text,
     fontFamily: 'Nunito_700Bold',
-    fontSize: 13,
+    fontSize: 14,
   },
   pin: {
     position: 'absolute',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+    width: 48,
+    height: 48,
+    borderRadius: 16,
     backgroundColor: colors.white,
-    borderRadius: 14,
-    paddingVertical: 8,
-    paddingHorizontal: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
     ...cardShadow,
   },
   pinIcon: {
@@ -190,23 +204,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  ticket: {
-    color: colors.muted,
-    fontFamily: 'Nunito_600SemiBold',
-    fontSize: 10,
+  pinTail: {
+    position: 'absolute',
+    bottom: -5,
+    width: 12,
+    height: 12,
+    backgroundColor: colors.white,
+    transform: [{ rotate: '45deg' }],
   },
-  pinTitle: {
-    color: colors.text,
-    fontFamily: 'Nunito_800ExtraBold',
-    fontSize: 13,
-  },
-  locate: {
+  layers: {
     position: 'absolute',
     right: 16,
-    width: 46,
-    height: 46,
-    borderRadius: 23,
-    backgroundColor: colors.white,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: colors.accent,
     alignItems: 'center',
     justifyContent: 'center',
     ...cardShadow,
@@ -221,29 +233,52 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   card: {
-    width: 280,
-    height: 132,
+    width: 320,
+    backgroundColor: colors.white,
     borderRadius: 18,
-    overflow: 'hidden',
-    backgroundColor: '#D7EEF6',
+    padding: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    ...cardShadow,
   },
   cardImage: {
-    width: '100%',
-    height: '100%',
+    width: 72,
+    height: 72,
+    borderRadius: 12,
+    backgroundColor: '#F8D5C4',
+  },
+  cardBody: {
+    flex: 1,
+  },
+  cardTime: {
+    color: colors.accent,
+    fontFamily: 'Nunito_700Bold',
+    fontSize: 12,
+  },
+  cardTitle: {
+    marginTop: 2,
+    color: colors.text,
+    fontFamily: 'Nunito_800ExtraBold',
+    fontSize: 15,
+  },
+  cardPlace: {
+    marginTop: 4,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  cardPlaceText: {
+    flex: 1,
+    color: colors.muted,
+    fontFamily: 'Nunito_600SemiBold',
+    fontSize: 12,
   },
   cardPeek: {
-    width: 72,
-    backgroundColor: '#F6C445',
-  },
-  bookmark: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
-    width: 28,
-    height: 28,
-    borderRadius: 8,
+    width: 36,
+    height: 92,
+    borderRadius: 18,
     backgroundColor: colors.white,
-    alignItems: 'center',
-    justifyContent: 'center',
+    ...cardShadow,
   },
 });
