@@ -8,6 +8,7 @@ import { EventDetailsScreen } from './src/screens/EventDetailsScreen';
 import { EventListScreen } from './src/screens/EventListScreen';
 import { EventsScreen } from './src/screens/EventsScreen';
 import { FilterScreen } from './src/screens/FilterScreen';
+import { InviteFriendScreen } from './src/screens/InviteFriendScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import MapScreen from './src/screens/MapScreen';
 import { NotificationScreen } from './src/screens/NotificationScreen';
@@ -37,7 +38,8 @@ type Screen =
   | 'eventList'
   | 'profile'
   | 'user'
-  | 'notifications';
+  | 'notifications'
+  | 'invite';
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>('splash');
@@ -151,7 +153,10 @@ export default function App() {
             setUserTab('about');
             setScreen('user');
           }}
+          onOpenFriends={() => setScreen('invite')}
         />
+      ) : screen === 'invite' && fontsLoaded ? (
+        <InviteFriendScreen onClose={() => setScreen('event')} onInvite={() => setScreen('event')} />
       ) : screen === 'signin' && fontsLoaded ? (
         <SignInScreen
           onSignIn={() => setScreen('home')}

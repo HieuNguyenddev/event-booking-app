@@ -4,6 +4,7 @@ import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-nati
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { PrimaryButton } from '../components/PrimaryButton';
+import { ShareSheet } from '../components/ShareSheet';
 import { cardShadow, colors } from '../theme';
 import type { IconName } from '../types';
 
@@ -12,12 +13,14 @@ const AVATARS = ['#F3C3A3', '#C9A27A'];
 type Props = {
   onBack: () => void;
   onOpenOrganizer?: () => void;
+  onOpenFriends?: () => void;
 };
 
-export function EventDetailsScreen({ onBack, onOpenOrganizer }: Props) {
+export function EventDetailsScreen({ onBack, onOpenOrganizer, onOpenFriends }: Props) {
   const insets = useSafeAreaInsets();
   const [saved, setSaved] = useState(false);
   const [following, setFollowing] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
 
   return (
     <View style={styles.screen}>
@@ -45,7 +48,7 @@ export function EventDetailsScreen({ onBack, onOpenOrganizer }: Props) {
             ))}
           </View>
           <Text style={styles.going}>+20 Going</Text>
-          <Pressable style={styles.invite}>
+          <Pressable style={styles.invite} onPress={() => setShareOpen(true)}>
             <Text style={styles.inviteText}>Invite</Text>
           </Pressable>
         </View>
@@ -77,6 +80,15 @@ export function EventDetailsScreen({ onBack, onOpenOrganizer }: Props) {
       <View style={[styles.footer, { paddingBottom: insets.bottom + 12 }]}>
         <PrimaryButton label="BUY TICKET $120" onPress={() => undefined} />
       </View>
+      {shareOpen ? (
+        <ShareSheet
+          onClose={() => setShareOpen(false)}
+          onOpenFriends={() => {
+            setShareOpen(false);
+            onOpenFriends?.();
+          }}
+        />
+      ) : null}
     </View>
   );
 }
