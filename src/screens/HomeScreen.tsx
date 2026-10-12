@@ -16,9 +16,10 @@ type Props = {
   onOpenEvent?: () => void;
   onOpenMap?: () => void;
   onOpenSearch?: () => void;
+  onOpenEvents?: () => void;
 };
 
-export default function HomeScreen({ onSignOut, onOpenEvent, onOpenMap, onOpenSearch }: Props) {
+export default function HomeScreen({ onSignOut, onOpenEvent, onOpenMap, onOpenSearch, onOpenEvents }: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -43,7 +44,12 @@ export default function HomeScreen({ onSignOut, onOpenEvent, onOpenMap, onOpenSe
         <InviteBanner />
         <SectionHeader title="Nearby You" />
       </ScrollView>
-      <HomeTabBar onTabPress={(label) => label === 'Map' && onOpenMap?.()} />
+      <HomeTabBar
+        onTabPress={(label) => {
+          if (label === 'Map') onOpenMap?.();
+          if (label === 'Events') onOpenEvents?.();
+        }}
+      />
       {menuOpen ? (
         <SideMenu
           onClose={() => setMenuOpen(false)}

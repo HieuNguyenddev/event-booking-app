@@ -5,6 +5,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { onboardingSlides } from './src/data/onboarding';
 import { useAppFonts } from './src/hooks/useAppFonts';
 import { EventDetailsScreen } from './src/screens/EventDetailsScreen';
+import { EventsScreen } from './src/screens/EventsScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import MapScreen from './src/screens/MapScreen';
 import { OnboardingScreen } from './src/screens/OnboardingScreen';
@@ -15,7 +16,18 @@ import { SignUpScreen } from './src/screens/SignUpScreen';
 import { SplashScreen } from './src/screens/SplashScreen';
 import { VerificationScreen } from './src/screens/VerificationScreen';
 
-type Screen = 'splash' | 'onboarding' | 'signin' | 'signup' | 'verify' | 'reset' | 'home' | 'event' | 'map' | 'search';
+type Screen =
+  | 'splash'
+  | 'onboarding'
+  | 'signin'
+  | 'signup'
+  | 'verify'
+  | 'reset'
+  | 'home'
+  | 'event'
+  | 'map'
+  | 'search'
+  | 'events';
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>('splash');
@@ -45,7 +57,10 @@ export default function App() {
           onOpenEvent={() => setScreen('event')}
           onOpenMap={() => setScreen('map')}
           onOpenSearch={() => setScreen('search')}
+          onOpenEvents={() => setScreen('events')}
         />
+      ) : screen === 'events' && fontsLoaded ? (
+        <EventsScreen onBack={() => setScreen('home')} onExplore={() => setScreen('home')} />
       ) : screen === 'search' && fontsLoaded ? (
         <SearchScreen onBack={() => setScreen('home')} onOpenEvent={() => setScreen('event')} />
       ) : screen === 'map' && fontsLoaded ? (
