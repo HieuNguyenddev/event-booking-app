@@ -1,5 +1,6 @@
 export const colors = {
   purple: '#4A43EC',
+  accent: '#5669F6',
   sheet: '#5A68F6',
   text: '#120D26',
   muted: '#747688',

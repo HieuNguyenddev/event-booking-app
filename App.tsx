@@ -6,9 +6,13 @@ import { onboardingSlides } from './src/data/onboarding';
 import { useAppFonts } from './src/hooks/useAppFonts';
 import HomeScreen from './src/screens/HomeScreen';
 import { OnboardingScreen } from './src/screens/OnboardingScreen';
+import { ResetPasswordScreen } from './src/screens/ResetPasswordScreen';
+import { SignInScreen } from './src/screens/SignInScreen';
+import { SignUpScreen } from './src/screens/SignUpScreen';
 import { SplashScreen } from './src/screens/SplashScreen';
+import { VerificationScreen } from './src/screens/VerificationScreen';
 
-type Screen = 'splash' | 'onboarding' | 'home';
+type Screen = 'splash' | 'onboarding' | 'signin' | 'signup' | 'verify' | 'reset' | 'home';
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>('splash');
@@ -19,7 +23,7 @@ export default function App() {
   const lightStatus = showHome || (showOnboarding && slide === 0);
 
   function finishOnboarding() {
-    setScreen('home');
+    setScreen('signin');
   }
 
   function goNext() {
@@ -34,6 +38,22 @@ export default function App() {
     <SafeAreaProvider>
       {showHome ? (
         <HomeScreen />
+      ) : screen === 'signin' && fontsLoaded ? (
+        <SignInScreen
+          onSignIn={() => setScreen('home')}
+          onSignUp={() => setScreen('signup')}
+          onForgotPassword={() => setScreen('reset')}
+        />
+      ) : screen === 'signup' && fontsLoaded ? (
+        <SignUpScreen
+          onBack={() => setScreen('signin')}
+          onSignIn={() => setScreen('signin')}
+          onSignUp={() => setScreen('verify')}
+        />
+      ) : screen === 'verify' && fontsLoaded ? (
+        <VerificationScreen onBack={() => setScreen('signup')} onContinue={() => setScreen('home')} />
+      ) : screen === 'reset' && fontsLoaded ? (
+        <ResetPasswordScreen onBack={() => setScreen('signin')} onSend={() => setScreen('signin')} />
       ) : showOnboarding ? (
         <OnboardingScreen index={slide} onSkip={finishOnboarding} onNext={goNext} />
       ) : (
